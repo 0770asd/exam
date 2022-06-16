@@ -112,6 +112,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     ```
 
 ### 특정 위도와 경도에 핀 설치하고 핀에 타이틀과 서브 타이틀의 문자열 표시/ 함수 호출
+
 ```javascript
     func goLocation(latitudeValue: CLLocationDegrees, longitudeValue : CLLocationDegrees, delta span :Double) -> CLLocationCoordinate2D {
         let pLocation = CLLocationCoordinate2DMake(latitudeValue, longitudeValue)
@@ -132,6 +133,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
 
 
 ## 위치 정보에서 국가, 지역, 도로를 추출하여 레이블에 표시
+
 ```javascript
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let pLocation = locations.last
@@ -159,6 +161,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
 ```
 
 ## 세그먼트 컨트롤을 선택하였을 때 호출
+
 ```javascript
     @IBAction func sgChange(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
