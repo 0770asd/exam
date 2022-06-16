@@ -1,5 +1,6 @@
 # 201916016_A반_강현우_모바일 프로그래밍 시험
-## ViewController
+
+# ViewController
 
 ```javascript
 import UIKit
@@ -29,7 +30,7 @@ class ViewController: UIViewController {
 }
 ```
 
-## MovieViewController (영상 재생 페이지)
+# MovieViewController (영상 재생 페이지)
 
 ```javascript
 import UIKit
@@ -82,7 +83,7 @@ class MovieViewController: UIViewController {
 ```
 
 
-## MapViewController (맵 검색 페이지)
+# MapViewController (맵 검색 페이지)
 
 ```javascript
 import UIKit
@@ -188,19 +189,154 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
 }
 ```
 
+# WebViewController (앱페이지 검색 페이지)
 
+```javascript
+import UIKit
+import WebKit
 
+class WebViewController: UIViewController, WKNavigationDelegate {
 
+    @IBOutlet var txtUrl: UITextField!
+    @IBOutlet var myWebView: WKWebView!
+    @IBOutlet var myActivity: UIActivityIndicatorView!
+```
 
+### url의 인수를 통해 웹 페이지의 주소를 전달받아 웹 페이지를 보여 줌
+```javascript
+    func loadWepPage(_ url: String) {
+        let myUrl = URL(string: url)
+        let myRequest = URLRequest(url: myUrl!)
+        myWebView.load(myRequest)
+    }
+```
 
+### 웹 페이지의 초기 페이지 설정
+```javascript
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        myWebView.navigationDelegate = self
+        loadWepPage("http://www.naver.com")
+    }
+```
 
+### 텍스트 필드에 적힌 주소로 웹 뷰 로딩
+```javascript
+    @IBAction func btnGotoUrl(_ sender: UIButton) {
+        let myUrl = checkUrl(txtUrl.text!)
+        txtUrl.text = ""
+        loadWepPage(myUrl)
+    }
+```
 
+### 웹 플레이어가 로딩 중 일때 인디케이터의 온/오프
+```javascript
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        myActivity.startAnimating()
+        myActivity.isHidden = false
+    }
 
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        myActivity.stopAnimating()
+        myActivity.isHidden = true
+    }
 
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        myActivity.stopAnimating()
+        myActivity.isHidden = true
+    }
+```
 
+### "http//" 문자열이 없을 경우 자동으로 삽입
+```javascript
+    func checkUrl(_ url: String) -> String {
+        var strUrl = url
+        let flag = strUrl.hasPrefix("http://")
+        if !flag {
+            strUrl = "http://" + strUrl
+        }
+        return strUrl
+    }
+```
 
+### [Site1] 버튼 클릭 시 구글 홈페이지로 이동
+```javascript
+    @IBAction func btnGoSite1(_ sender: UIButton) {
+        loadWepPage("http://www.google.com")
+    }
+```
 
+### [Site2] 버튼 클릭 시 유튜브 홈페이지로 이동
+```javascript
+    @IBAction func btnGoSite2(_ sender: UIButton) {
+        loadWepPage("http://m.youtube.com")
+    }
+```
 
+### HTML 코드를 변수에 저장하고 번튼 클릭 시 문법에 맞게 웹뷰에 나타냄
+```javascript
+    @IBAction func btnLoadHtmlString(_ sender: UIButton) {
+        let htmlString = "<h1> HTML String </h1><p> String 변수를 이용한 웹 페이지 </p><p><a href=\"http://2sam.net\">2sam</a>으로 이동</p>"
+        myWebView.loadHTMLString(htmlString, baseURL: nil)
+    }
 
+    @IBAction func btnLoadHtmlFile(_ sender: UIButton) {
+        let filePath = Bundle.main.path(forResource: "htmlView", ofType: "html")
+        let mtUrl = URL(fileURLWithPath: filePath!)
+        let myRequest = URLRequest(url: mtUrl)
+        myWebView.load(myRequest)
+    }
+```
+
+### 웹 페이지의 조작
+```javascript
+    @IBAction func btnStop(_ sender: UIBarButtonItem) {
+        myWebView.stopLoading() // 웹 페이지의 로딩을 중지
+    }
+
+    @IBAction func btnReload(_ sender: UIBarButtonItem) {
+        myWebView.reload() // 웹 페이지를 재로딩
+    }
+
+    @IBAction func btnReWind(_ sender: UIBarButtonItem) {
+        myWebView.goBack() // 이전 웹 페이지로 이동
+    }
+
+    @IBAction func btnGoForward(_ sender: UIBarButtonItem) {
+        myWebView.goForward() // 다음 웹 페이지로 이동
+    }
+}
+```
+
+# 동작
+
+## 초기 페이지의 동작
+<img src="https://user-images.githubusercontent.com/106363908/174185741-084a840e-63bb-4439-882d-65822ea78135.png" width="400" height="700">
+
+## 맵 검색 페이지의 동작
+<img src="https://user-images.githubusercontent.com/106363908/174185844-680487a0-a3b0-45da-a820-8426af894518.png" width="400" height="700">
+
+<img src="https://user-images.githubusercontent.com/106363908/174185873-4044c3ea-949a-4716-b34d-5b9470e09047.png" width="400" height="700">
+
+<img src="https://user-images.githubusercontent.com/106363908/174185894-f86f3e63-255d-4082-90b7-6022130a188e.png" width="400" height="700">
+
+## 영상 재생 페이지의 동작
+<img src="https://user-images.githubusercontent.com/106363908/174186322-42269fc0-b267-4317-8843-57c274d4db0b.png" width="400" height="700">
+
+<img src="https://user-images.githubusercontent.com/106363908/174186346-c1424426-700a-4bcc-bd9a-e9aba7f6316a.png" width="400" height="700">
+
+## 영상 검색 페이지의 동작
+<img src="https://user-images.githubusercontent.com/106363908/174186623-42e7f3e7-6628-4273-8530-287805860cc7.png" width="400" height="700">
+
+<img src="https://user-images.githubusercontent.com/106363908/174186655-552062fb-0c57-4ccf-aed4-1cbf1877a66f.png" width="400" height="700">
+
+<img src="https://user-images.githubusercontent.com/106363908/174186681-eeddb6c6-0c68-48c2-89be-6a01249ff568.png" width="400" height="700">
+
+<img src="https://user-images.githubusercontent.com/106363908/174186726-1f6ce86a-1702-404e-8988-df5017467603.png" width="400" height="700">
+
+<img src="https://user-images.githubusercontent.com/106363908/174186813-cb4370a8-e8f4-4ecb-bd33-59572aa85eae.png" width="400" height="700">
+
+<img src="https://user-images.githubusercontent.com/106363908/174186835-d9774a7d-7179-4d2b-a09b-46f153fd53eb.png" width="400" height="700">
 
 
